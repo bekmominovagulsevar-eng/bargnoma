@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bargnoma — AI o‘simlik shifokori</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#eaf5e6;--mut:#a7c4ac;--line:#ffffff2e;--card:#14361f;--g:#5fd36a;--g2:#a8f293;--gl:#7be0691f;--red:#ffb09a;--redl:#ff7a5a2b;--amb:#ffd96b;--ambl:#ffd2502b;--glass:#ffffff14;--glass2:#ffffff0a;--b1:#2f8a3c;--b2:#12512a;--b3:#06170d;--f:"Manrope","Segoe UI",system-ui,sans-serif}
+:root[data-theme=dark]{--b1:#1a5a28;--b2:#0b2f17;--b3:#020a05;--glass:#ffffff0e}
+*{box-sizing:border-box;margin:0}
+html{background:var(--b3)}
+body{font-family:var(--f);color:var(--ink);line-height:1.5;min-height:100vh;position:relative;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:-10%;z-index:-2;background:radial-gradient(40% 35% at 15% 20%,var(--b1),transparent 70%),radial-gradient(45% 40% at 85% 35%,var(--b2),transparent 70%),radial-gradient(50% 45% at 40% 95%,var(--b1),transparent 70%),var(--b3);filter:blur(30px)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;opacity:.12;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+button,input,select{font:inherit}button{cursor:pointer;border:0}
+:focus-visible{outline:3px solid var(--g2);outline-offset:3px}
+.gl,.panel,.tagcard,.bar,.phone,.drop{background:linear-gradient(150deg,#ffffff1c,#ffffff08);border:1px solid var(--line);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:inset 0 1px 0 #ffffff22,0 24px 50px -28px #000c}
+.bar{position:sticky;top:14px;z-index:5;margin:14px auto 0;width:min(1120px,calc(100% - 28px));border-radius:60px;padding:8px 10px 8px 22px;display:flex;align-items:center;gap:14px}
+.logo{font-weight:800;font-size:20px;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;margin-right:auto}
+.logo svg{width:24px;height:24px}
+#nav{display:flex;gap:2px}
+#nav button{background:none;color:var(--ink);padding:9px 16px;border-radius:40px;font-size:14.5px;opacity:.7;font-weight:500}
+#nav button.on{background:#fff;color:#0d2a18;opacity:1;font-weight:700}
+.tbtn{background:var(--glass);color:var(--ink);padding:9px 16px;border-radius:40px;font-size:14px;border:1px solid var(--line)}
+main{width:min(1120px,calc(100% - 28px));margin:0 auto;padding:30px 0 70px}
+.page{display:none}.page.on{display:block}
+.hero{text-align:center;padding:26px 0 0}
+.hero h1{font-size:clamp(40px,7vw,84px);line-height:.98;font-weight:800;letter-spacing:-.04em}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,#c6ff9e,#4fd66a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:32em;margin:18px auto 0;font-size:18px;color:var(--mut)}
+.phones{display:flex;gap:26px;justify-content:center;overflow-x:auto;padding:46px 10px 24px;scroll-snap-type:x mandatory}
+.phone{flex:0 0 auto;width:252px;height:530px;border-radius:42px;padding:16px 18px 18px;display:flex;flex-direction:column;scroll-snap-align:center;text-align:left;position:relative}
+.phone.mid{transform:translateY(-22px)}
+.phone::after{content:"";position:absolute;bottom:8px;left:50%;width:90px;height:4px;margin-left:-45px;background:#fff;border-radius:4px;opacity:.9}
+.st{display:flex;justify-content:space-between;font-size:11px;font-weight:700;margin-bottom:8px}
+.phone h3{font-size:21px;letter-spacing:-.02em;line-height:1.15}
+.phone p{font-size:12px;color:var(--mut);margin-top:6px}
+.pill{display:block;width:100%;background:#fff;color:#0d2a18;border-radius:40px;padding:12px;text-align:center;font-weight:700;font-size:13px;margin-top:auto;margin-bottom:12px}
+.pill.g{background:var(--glass);color:var(--ink);border:1px solid var(--line);margin:0 0 12px}
+.fld{width:100%;background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:12px 14px;color:var(--ink);font-size:13px;margin-top:10px}
+.fld::placeholder{color:var(--mut)}
+.fld option{color:#000}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:16px 0 10px}
+.tile{border-radius:14px;padding:8px 5px;text-align:center;font-size:9.5px;font-weight:700;line-height:1.2;background:var(--glass);border:1px solid var(--line)}
+.tile.hi{background:linear-gradient(160deg,#6fdc5a,#2f9a3f);color:#06210f;transform:translateY(-6px)}
+.tile i{display:block;width:30px;height:30px;border-radius:50%;margin:0 auto 6px;background:radial-gradient(circle at 35% 30%,#d9ffc5,#3fc85a)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;border-radius:16px;padding:12px;margin-top:8px;background:var(--glass);border:1px solid var(--line)}
+.row b{font-size:12px;display:block}.row span{font-size:10px;color:var(--mut);line-height:1.3;display:block}
+.bars{display:flex;gap:7px;height:44px}
+.bars i{width:6px;border-radius:6px;background:var(--g);position:relative}
+.bars i::after{content:"";position:absolute;left:-4px;width:14px;height:8px;border-radius:5px;background:#e9ffe0;top:var(--t)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(180deg,#9cf27c,#43c95c);color:#07210f;padding:13px 26px;border-radius:40px;font-weight:800;margin:16px 0 8px}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:var(--glass);color:var(--ink);border:1px solid var(--line);margin:0;font-weight:700}
+h2.sec{font-size:clamp(24px,3.4vw,34px);letter-spacing:-.03em;margin:46px 0 6px}
+.strip{display:flex;gap:34px;flex-wrap:wrap;margin:6px 0 26px}
+.strip div{display:flex;align-items:baseline;gap:10px}
+.strip b{font-size:34px;font-weight:800;letter-spacing:-.03em;color:var(--g2)}
+.strip span{color:var(--mut);font-size:14px}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:28px;align-items:start}
+.drop{border:2px dashed #7be069aa;border-radius:150px 30px 150px 30px;padding:58px 36px;text-align:center;transition:.25s}
+.drop.over{background:var(--gl);border-radius:30px 150px 30px 150px}
+.drop svg{width:62px;height:62px;color:var(--g)}
+.drop h2{font-size:25px;letter-spacing:-.02em;margin-top:6px}
+.drop p{color:var(--mut);font-size:14.5px;margin:4px 0}
+.samples{display:flex;gap:14px;flex-wrap:wrap;padding:18px 4px}
+.samples button{background:var(--glass);border:1px solid var(--line);color:var(--ink);padding:8px 8px 10px;width:104px;font-size:13px;text-align:center;border-radius:16px;transform:rotate(-2.5deg);transition:transform .2s}
+.samples button:nth-child(even){transform:rotate(2deg)}
+.samples button:hover{transform:rotate(0) translateY(-4px)}
+.samples img{width:100%;aspect-ratio:1;object-fit:cover;display:block;margin-bottom:6px;border-radius:10px}
+.tagcard{border-radius:28px;padding:24px}
+.tagcard h2{font-size:20px;margin-bottom:14px}
+.empty{text-align:center;color:var(--mut);padding:40px 10px;font-size:15px}
+.preview{position:relative;border-radius:18px;overflow:hidden;background:#000;aspect-ratio:4/3}
+.preview img{width:100%;height:100%;object-fit:cover;display:block}
+.scan{position:absolute;left:0;right:0;height:3px;background:#9bffb8;box-shadow:0 0 24px 10px #9bffb888;animation:scan 1.3s ease-in-out infinite alternate;display:none}
+.preview.busy .scan{display:block}
+@keyframes scan{from{top:0}to{top:calc(100% - 3px)}}
+.res{margin-top:16px;border-radius:18px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:14px;border:1px solid var(--line)}
+.res.bad{background:var(--redl);color:var(--red)}
+.res.warn{background:var(--ambl);color:var(--amb)}
+.res.ok{background:var(--gl);color:var(--g2)}
+.res h3{font-size:22px;letter-spacing:-.02em;line-height:1.15}
+.ring{--p:0;width:78px;height:78px;border-radius:50%;background:conic-gradient(currentColor calc(var(--p)*1%),#ffffff22 0);display:grid;place-items:center;flex-shrink:0;transition:.6s}
+.ring b{background:var(--card);color:var(--ink);width:62px;height:62px;border-radius:50%;display:grid;place-items:center;font-size:16px}
+.info h4{font-size:15px;margin:18px 0 6px;color:var(--g2)}
+.info p,.info li{font-size:15px;color:var(--mut)}
+.info ul{padding-left:20px}
+.alt{font-size:13.5px;margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+.acts{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}.acts .btn{margin:0}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th{text-align:left;color:var(--mut);font-weight:600;padding:8px;border-bottom:1px solid var(--line)}
+td{padding:10px 8px;border-bottom:1px solid #ffffff14;vertical-align:middle}
+td img{width:44px;height:44px;border-radius:50%;object-fit:cover;display:block}
+.panel{border-radius:24px;padding:20px 24px}
+.page .top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin:20px 0 26px}
+.page h1.pt{font-size:clamp(34px,5vw,54px);font-weight:800;letter-spacing:-.04em;line-height:1}
+.sub{color:var(--mut);margin-top:8px}
+.dis{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px}
+.dis .panel{padding:14px 14px 20px}
+.dis img{width:100%;height:160px;object-fit:cover;border-radius:60px 14px 60px 14px;margin-bottom:14px}
+.dis h2{padding:0 6px;font-size:19px}.dis p{padding:0 6px}
+.tag{display:inline-block;font-size:12.5px;padding:3px 12px;border-radius:20px;margin:0 6px 8px;font-weight:700}
+.set label{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid #ffffff14;gap:14px}
+.set input[type=checkbox]{width:22px;height:22px;accent-color:#5fd36a}.set input[type=range]{accent-color:#5fd36a}
+.note{font-size:13px;color:var(--mut);margin-top:26px;max-width:50em}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,90px);background:#fff;color:#0d2a18;font-weight:700;padding:12px 24px;border-radius:40px;transition:.3s;z-index:9}
+.toast.show{transform:translate(-50%,0)}
+@media(max-width:900px){
+ .grid{grid-template-columns:1fr}
+ .bar{border-radius:26px;flex-wrap:wrap;padding:12px 14px}
+ #nav{order:3;width:100%;overflow-x:auto}#nav button{white-space:nowrap}
+ .phones{justify-content:flex-start}
+ .drop{padding:40px 20px;border-radius:90px 24px 90px 24px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.hero2{position:relative;border-radius:36px;overflow:hidden;min-height:560px;display:flex;align-items:center;padding:60px clamp(24px,6vw,72px);background:linear-gradient(120deg,#0d3a1c,#2c8a3f 65%,#7be069);border:1px solid var(--line);margin-top:6px}
+.hero2 .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero2::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#04140af0 0%,#04140a9e 55%,#04140a1f 100%)}
+.hero2 .in{position:relative;z-index:2;max-width:640px}
+.hero2 h1{font-size:clamp(42px,6.6vw,80px);line-height:.98;font-weight:800;letter-spacing:-.04em}
+.hero2 h1 em{font-style:normal;background:linear-gradient(90deg,#c6ff9e,#4fd66a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero2 p{margin-top:18px;font-size:18px;color:#d4e8d6;max-width:30em}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.cta .btn{margin:0}
+a.btn{text-decoration:none}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.chips span{background:#ffffff1c;border:1px solid var(--line);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);padding:6px 14px;border-radius:30px;font-size:13px;font-weight:700}
+.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:22px;align-items:start}
+.gal figure{position:relative;border-radius:26px;overflow:hidden;aspect-ratio:3/4;background:linear-gradient(160deg,#2a7d3c,#0b2c15);border:1px solid var(--line)}
+.gal figure:nth-child(even){margin-top:28px}
+.gal img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.gal figcaption{position:absolute;left:10px;right:10px;bottom:10px;z-index:2;padding:8px 12px;border-radius:14px;font-size:13px;font-weight:700;background:#04140a88;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
+.feat i{display:block;width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d9ffc5,#3fc85a)}
+.feat h3{font-size:20px;margin:14px 0 4px;letter-spacing:-.02em}.feat p{color:var(--mut);font-size:14.5px}
+.two{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;margin-top:20px;align-items:start}
+.steps{margin:14px 0 0 20px;color:var(--mut);display:grid;gap:12px;font-size:15px}.steps b{color:var(--ink)}
+@media(max-width:900px){.gal{grid-template-columns:repeat(2,1fr)}.feat,.two{grid-template-columns:1fr}.hero2{min-height:480px}.hero2::before{background:linear-gradient(180deg,#04140ab0,#04140af0)}}
+</style>
+</head>
+<body>
+<header class="bar">
+ <div class="logo"><svg viewBox="0 0 32 32" fill="none"><path d="M5 27C5 12 13 4 28 4c0 15-8 23-23 23Z" fill="#7be069"/><path d="M5 27 21 11" stroke="#06170d" stroke-width="2.4" stroke-linecap="round"/></svg>Bargnoma</div>
+ <nav id="nav">
+  <button data-p="home" class="on">Tashxis</button>
+  <button data-p="diseases">Kasalliklar</button>
+  <button data-p="history">Tarix</button>
+  <button data-p="settings">Sozlamalar</button>
+ </nav>
+ <button class="tbtn" id="themeBtn">Tungi rejim</button>
+</header>
+
+<main>
+<section class="page on" id="home">
+ <div class="hero2">
+  <img class="ph" src="images/hero.jpg" alt="" onerror="this.remove()">
+  <div class="in">
+   <h1 id="heroT">AI <em>o‘simlik</em> shifokori</h1>
+   <p>Bargni suratga oling: kasallikni aniqlaymiz, davolash rejasini beramiz va o‘simlik holatini kuzatib boramiz.</p>
+   <div class="cta"><a class="btn" href="#tool">Tashxisni boshlash</a><a class="btn ghost" href="#how">Qanday ishlaydi?</a></div>
+   <div class="chips"><span>Gemini AI</span><span>5 xil kasallik</span><span>Bepul</span></div>
+  </div>
+ </div>
+
+ <div class="gal">
+  <figure><img src="images/g1.jpg" alt="Sog‘lom barg" onerror="this.remove()"><figcaption>Sog‘lom barg</figcaption></figure>
+  <figure><img src="images/g2.jpg" alt="Kasal barg" onerror="this.remove()"><figcaption>Kasal barg</figcaption></figure>
+  <figure><img src="images/g3.jpg" alt="Dala" onerror="this.remove()"><figcaption>Dala va issiqxona</figcaption></figure>
+  <figure><img src="images/g4.jpg" alt="Dehqon" onerror="this.remove()"><figcaption>Dehqon uchun</figcaption></figure>
+ </div>
+
+ <div class="feat">
+  <div class="panel"><i></i><h3>Tezkor tashxis</h3><p>Surat yuklang va bir necha soniyada kasallik turini bilib oling.</p></div>
+  <div class="panel"><i></i><h3>Amaliy rejalar</h3><p>Har bir kasallik uchun aniq qadamma-qadam davolash choralari.</p></div>
+  <div class="panel"><i></i><h3>Tarix va kuzatuv</h3><p>Barcha tashxislar saqlanadi, o‘simlik holatini vaqt bo‘yicha solishtiring.</p></div>
+ </div>
+
+ <div class="two" id="how">
+  <div class="panel">
+   <h3 style="font-size:22px;letter-spacing:-.02em">Qanday ishlaydi?</h3>
+   <ol class="steps"><li><b>Suratga oling.</b> Barg yorug‘ joyda, yaqindan va to‘liq kadrda bo‘lsin.</li><li><b>Yuklang.</b> Rasmni sudrab tashlang yoki qurilmadan tanlang.</li><li><b>Natijani oling.</b> Kasallik, ishonchlilik darajasi va tavsiyalar chiqadi.</li></ol>
+  </div>
+  <div class="panel">
+   <h3 style="font-size:22px;letter-spacing:-.02em">Profilingiz</h3>
+   <p class="sub" style="margin-top:4px">Ma’lumot faqat sizning brauzeringizda saqlanadi.</p>
+   <input class="fld" id="uName" placeholder="Ism" autocomplete="given-name">
+   <input class="fld" id="uFarm" placeholder="Dala yoki bog‘ nomi">
+   <select class="fld" id="uCrop"><option>Pomidor</option><option>Kartoshka</option><option>Bodring</option><option>Boshqa</option></select>
+   <button class="btn" id="joinBtn" style="margin-top:16px">Saqlash</button>
+  </div>
+ </div>
+
+ <h2 class="sec" id="tool">Tashxis qo‘ying</h2>
+ <div class="strip"><div><b id="sTotal">0</b><span>tashxis</span></div><div><b id="sSick">0</b><span>kasal barg</span></div><div><b id="sHealthy">0</b><span>sog‘lom barg</span></div></div>
+ <div class="grid">
+  <div>
+   <div class="drop" id="drop">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 20C5 11 9 5 19 4c0 9-4 15-14 16Z"/><path d="M5 20 14 11"/></svg>
+    <h2>Barg suratini shu yerga tashlang</h2>
+    <p>yoki qurilmangizdan tanlang</p>
+    <button class="btn" id="pick">Rasm tanlash</button>
+    <p>JPG, PNG, WEBP · 5 MB gacha</p>
+    <input type="file" id="file" accept="image/*" hidden>
+   </div>
+   <h2 class="sec" style="font-size:20px;margin-top:30px">Namunalar</h2>
+   <div class="samples" id="samples"></div>
+  </div>
+  <div class="tagcard" id="result">
+   <h2>Tashxis natijasi</h2>
+   <div class="empty" id="empty"><p>Natija shu yerda paydo bo‘ladi.<br>Surat yuklang yoki namunani bosing.</p></div>
+   <div id="out" hidden>
+    <div class="preview" id="prev"><img id="pimg" alt="Yuklangan barg"><div class="scan"></div></div>
+    <div id="det" hidden>
+     <div class="res" id="res"><div><h3 id="rName"></h3><div id="rConf" style="font-size:14px;margin-top:4px"></div></div><div class="ring" id="ring"><b id="rPct"></b></div></div>
+     <div class="info">
+      <h4>Qisqacha ma’lumot</h4><p id="rDesc"></p>
+      <h4>Tavsiya etilgan choralar</h4><ul id="rTips"></ul>
+      <p class="alt" id="rAlt"></p>
+     </div>
+     <div class="acts"><button class="btn" id="saveBtn">Natijani saqlash</button><button class="btn ghost" id="histBtn">Tarixga qo‘shish</button></div>
+    </div>
+   </div>
+  </div>
+ </div>
+ <h2 class="sec">So‘nggi tashxislar</h2>
+ <div class="panel" style="margin-top:12px"><div id="recent"></div></div>
+ <p class="note">Tashxis Gemini sun’iy intellekti yordamida qilinadi va taxminiy. Jiddiy holatlarda agronom bilan maslahatlashing. Namunaviy suratlar demo rejimda ishlaydi.</p>
+</section>
+
+<section class="page" id="diseases">
+ <div class="top"><div><h1 class="pt">Kasalliklar ma’lumotnomasi</h1><p class="sub">Pomidor bargida uchraydigan asosiy kasalliklar.</p></div></div>
+ <div class="dis" id="disList"></div>
+</section>
+
+<section class="page" id="history">
+ <div class="top"><div><h1 class="pt">Mening tarixim</h1><p class="sub">Saqlangan barcha tashxislar.</p></div><button class="tbtn" id="clearBtn">Tarixni tozalash</button></div>
+ <div class="panel" id="histBox"></div>
+</section>
+
+<section class="page" id="settings">
+ <div class="top"><div><h1 class="pt">Sozlamalar</h1></div></div>
+ <div class="panel set">
+  <label>Qorong‘i rejim <input type="checkbox" id="darkChk"></label>
+  <label>Natijani avtomatik tarixga saqlash <input type="checkbox" id="autoChk" checked></label>
+  <label>Eng kam ishonchlilik chegarasi <span><input type="range" id="thr" min="30" max="90" value="50"> <span id="thrV">50%</span></span></label>
+ </div>
+</section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- Kasalliklar bazasi ---------- */
+const DB={
+ healthy:{n:"Sog‘lom barg",lv:"ok",d:"Bargda kasallik belgilari topilmadi. O‘simlik yaxshi holatda.",t:["Sug‘orish rejimini saqlang","Har hafta bargni tekshirib turing","Mineral o‘g‘itlarni me’yorida bering"],c:["#4f9a3c","#6bb54d"]},
+ late:{n:"Kech kuydirgi (Late Blight)",lv:"bad",d:"Pomidorda uchraydigan keng tarqalgan zamburug‘li kasallik. Barglarda jigarrang dog‘lar paydo bo‘ladi. Kasallik tez tarqaladi va hosilga jiddiy zarar yetkazishi mumkin.",t:["Zararlangan barglarni olib tashlang","Mis saqlovchi preparatlar bilan ishlov bering","Sug‘orishni me’yorida amalga oshiring","Ekinlarni muntazam kuzatib boring"],c:["#6a8f3a","#6b4a22"]},
+ bact:{n:"Bakterial dog‘",lv:"bad",d:"Bakteriyalar qo‘zg‘atadigan kasallik. Barglarda kichik qora-jigarrang dog‘lar, atrofida sarg‘ish halqa hosil bo‘ladi.",t:["Kasal barglarni yig‘ib yoqing","Mis oksixlorid bilan püskürting","Yuqoridan sug‘ormang, barg ho‘l bo‘lmasin","Urug‘ni ekishdan oldin dorilang"],c:["#5d8c34","#2a2a1a"]},
+ mildew:{n:"Un-kukun (Powdery Mildew)",lv:"warn",d:"Bargning ustida oq, un o‘xshash qoplama paydo bo‘ladi. Issiq va quruq havoda tez tarqaladi.",t:["Oltingugurt preparatlari bilan ishlov bering","O‘simliklar orasini kengroq qoldiring","Zararlangan qismlarni kesib tashlang","Havo aylanishini yaxshilang"],c:["#6e9c4c","#e8ece6"]},
+ virus:{n:"Virusli kasallik",lv:"warn",d:"Barg sarg‘ayib, mozaika yoki burishgan ko‘rinish oladi. Odatda shira va oq qanot orqali tarqaladi.",t:["Kasal o‘simlikni ildizi bilan olib tashlang","Shira va oqqanotga qarshi kurashing","Asboblarni dezinfeksiya qiling","Chidamli navlarni tanlang"],c:["#5e9a3e","#d9cf2c"]}
+};
+DB.other={n:"Aniqlanmadi",lv:"warn",d:"Rasmda o‘simlik bargi aniq ko‘rinmadi.",t:["Bargni yaqindan, yorug‘ joyda suratga oling","Fon tekis bo‘lsin","Barg kadrda to‘liq ko‘rinsin"],c:["#777","#555"]};
+const ORDER=["healthy","bact","mildew","late","virus"];
+const LABELS={healthy:"Sog‘lom barg",bact:"Bakterial dog‘",mildew:"Un-kukun",late:"Kech kuydirgi",virus:"Virusli kasallik"};
+const $=s=>document.querySelector(s);
+const store={get:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+/* ---------- Namunaviy rasm chizish (canvas) ---------- */
+function leaf(key,seed=1){
+ const c=document.createElement("canvas");c.width=c.height=320;const x=c.getContext("2d");
+ let s=seed*9301;const r=()=>(s=(s*9301+49297)%233280)/233280;
+ const [base,spot]=DB[key].c;
+ const bg=x.createLinearGradient(0,0,320,320);bg.addColorStop(0,"#2c3b22");bg.addColorStop(1,"#4a5f35");x.fillStyle=bg;x.fillRect(0,0,320,320);
+ x.save();x.translate(160,165);x.rotate(-.5);
+ x.beginPath();x.moveTo(-130,0);x.bezierCurveTo(-70,-120,80,-110,135,0);x.bezierCurveTo(80,110,-70,120,-130,0);
+ const g=x.createRadialGradient(0,0,10,0,0,140);g.addColorStop(0,base);g.addColorStop(1,shade(base,-30));x.fillStyle=g;x.fill();x.clip();
+ x.strokeStyle="#ffffff40";x.lineWidth=3;x.beginPath();x.moveTo(-130,0);x.lineTo(135,0);x.stroke();
+ for(let i=-4;i<=4;i++){if(!i)continue;x.lineWidth=1.5;x.beginPath();x.moveTo(i*28,0);x.lineTo(i*28+25,i>0?70:-70);x.stroke()}
+ if(key==="mildew"){x.fillStyle="#f2f4efcc";for(let i=0;i<90;i++){x.beginPath();x.arc((r()-.5)*240,(r()-.5)*150,8+r()*20,0,7);x.fill()}}
+ else if(key!=="healthy"){const n=key==="virus"?50:key==="late"?9:30;
+  for(let i=0;i<n;i++){const px=(r()-.5)*220,py=(r()-.5)*130,rad=key==="late"?14+r()*24:key==="virus"?6+r()*14:4+r()*8;
+   x.beginPath();x.arc(px,py,rad*1.6,0,7);x.fillStyle=key==="virus"?"#d9cf2c88":"#d6b93a77";x.fill();
+   x.beginPath();x.arc(px,py,rad,0,7);x.fillStyle=spot;x.fill();}}
+ x.restore();
+ return c.toDataURL("image/jpeg",.85);
+}
+function shade(h,a){const n=parseInt(h.slice(1),16);const f=v=>Math.max(0,Math.min(255,v+a));return"#"+[(n>>16)&255,(n>>8)&255,n&255].map(f).map(v=>v.toString(16).padStart(2,"0")).join("")}
+
+/* ---------- Tashxis (DEMO) ----------
+   Haqiqiy model ulash uchun shu funksiyani almashtiring:
+   const fd=new FormData(); fd.append("image",file);
+   const r=await fetch("http://localhost:8000/predict",{method:"POST",body:fd});
+   return await r.json();   // { key:"late", conf:92.4, scores:{...} }
+*/
+let useDemo=false;
+async function analyze(src){
+ if(useDemo){useDemo=false;return analyzeDemo(src)}
+ try{
+  const im=new Image();im.src=src;await im.decode();
+  const m=Math.min(1,1024/Math.max(im.naturalWidth,im.naturalHeight));
+  const c=document.createElement("canvas");c.width=Math.round(im.naturalWidth*m);c.height=Math.round(im.naturalHeight*m);
+  c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+  const b64=c.toDataURL("image/jpeg",.85).split(",")[1];
+  const r=await fetch("/api/analyze",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({image:b64,mime:"image/jpeg"})});
+  const j=await r.json();
+  if(!r.ok)throw new Error(j.error||"Server xatosi");
+  return j;
+ }catch(e){
+  throw new Error(e.message==="Failed to fetch"?"Serverga ulanib bo‘lmadi. npm start ishlayaptimi?":e.message);
+ }
+}
+async function analyzeDemo(src){
+ await new Promise(r=>setTimeout(r,1800));
+ const im=new Image();im.src=src;await im.decode();
+ const c=document.createElement("canvas");c.width=c.height=96;const x=c.getContext("2d");x.drawImage(im,0,0,96,96);
+ const d=x.getImageData(0,0,96,96).data;let n=0,white=0,brown=0,yellow=0,dark=0,green=0;
+ for(let i=0;i<d.length;i+=4){const R=d[i],G=d[i+1],B=d[i+2];n++;
+  if(R>195&&G>195&&B>185)white++;
+  else if(R>G*1.05&&G>B&&R<190&&R>70)brown++;
+  else if(R>150&&G>150&&B<110)yellow++;
+  else if(R<60&&G<60&&B<60)dark++;
+  else if(G>=R&&G>B)green++;}
+ const p=v=>v/n;
+ const raw={healthy:.15+p(green)*1.4-(p(brown)+p(yellow)+p(white)+p(dark))*5,
+  mildew:p(white)*7,late:p(brown)*5.5+p(yellow)*1.2,bact:p(dark)*8+p(brown)*1.5,virus:p(yellow)*6.5};
+ const e={};let sum=0;for(const k in raw){e[k]=Math.exp(raw[k]*3.2);sum+=e[k]}
+ const scores={};for(const k in e)scores[k]=e[k]/sum*100;
+ const key=Object.keys(scores).sort((a,b)=>scores[b]-scores[a])[0];
+ return{key,conf:scores[key],scores};
+}
+
+/* ---------- Holat ---------- */
+let cur=null,history=store.get("hist",[]);
+const settings=store.get("set",{dark:false,auto:true,thr:50});
+
+function show(src){
+ $("#empty").hidden=true;$("#out").hidden=false;$("#det").hidden=true;
+ $("#pimg").src=src;$("#prev").classList.add("busy");
+ $("#result").scrollIntoView({behavior:"smooth",block:"nearest"});
+ analyze(src).then(res=>{
+  $("#prev").classList.remove("busy");
+  const low=res.conf<settings.thr;const info=DB[res.key];
+  cur={src,key:res.key,conf:+res.conf.toFixed(1),date:new Date().toLocaleString("sv-SE").slice(0,16)};
+  const box=$("#res");box.className="res "+(low?"warn":info.lv);
+  $("#rName").textContent=low?"Aniq emas: "+info.n:info.n;
+  $("#rConf").innerHTML="Ishonchlilik darajasi: <b>"+cur.conf+"%</b>";
+  $("#rPct").textContent=Math.round(cur.conf)+"%";
+  requestAnimationFrame(()=>$("#ring").style.setProperty("--p",cur.conf));
+  $("#rDesc").textContent=low?"Ishonchlilik past. Suratni yorug‘ joyda, barg yaqinroq olinib qayta yuklang. "+info.d:info.d;
+  if(res.izoh)$("#rDesc").textContent+=" Gemini izohi: "+res.izoh;
+  $("#rTips").innerHTML=info.t.map(t=>"<li>"+t+"</li>").join("");
+  const alt=Object.entries(res.scores).filter(([k])=>k!==res.key).sort((a,b)=>b[1]-a[1]).slice(0,2);
+  $("#rAlt").textContent="Boshqa ehtimollar: "+alt.map(([k,v])=>LABELS[k]+" "+v.toFixed(1)+"%").join(", ");
+  $("#det").hidden=false;
+  if(settings.auto)addHist(true);
+ }).catch(e=>{$("#prev").classList.remove("busy");$("#out").hidden=true;$("#empty").hidden=false;$("#empty").textContent="Xato: "+e.message;toast("Tahlil amalga oshmadi",4000)});
+}
+function addHist(silent){
+ if(!cur||cur.saved)return toast(cur?"Allaqachon tarixda":"Avval surat yuklang");
+ const thumb=thumbOf($("#pimg"));history.unshift({key:cur.key,conf:cur.conf,date:cur.date,img:thumb});
+ history=history.slice(0,30);cur.saved=1;store.set("hist",history);render();
+ if(!silent)toast("Tarixga qo‘shildi");
+}
+function thumbOf(img){const c=document.createElement("canvas");c.width=c.height=64;const x=c.getContext("2d");
+ const s=Math.min(img.naturalWidth,img.naturalHeight);x.drawImage(img,(img.naturalWidth-s)/2,(img.naturalHeight-s)/2,s,s,0,0,64,64);return c.toDataURL("image/jpeg",.7)}
+
+/* ---------- Fayl yuklash ---------- */
+function handle(f){
+ if(!f)return;
+ if(!/^image\/(jpeg|png|webp)$/.test(f.type))return toast("Faqat JPG, PNG yoki WEBP yuklang");
+ if(f.size>5*1024*1024)return toast("Fayl hajmi 5 MB dan oshmasligi kerak");
+ const r=new FileReader();r.onload=()=>show(r.result);r.readAsDataURL(f);
+}
+const drop=$("#drop");
+$("#pick").onclick=()=>$("#file").click();
+$("#file").onchange=e=>{handle(e.target.files[0]);e.target.value=""};
+["dragenter","dragover"].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.add("over")}));
+["dragleave","drop"].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.remove("over")}));
+drop.addEventListener("drop",e=>handle(e.dataTransfer.files[0]));
+
+/* ---------- Natijani saqlash ---------- */
+$("#saveBtn").onclick=()=>{
+ if(!cur)return;const i=DB[cur.key];
+ const txt=`AgroDiagnoz tashxisi\nSana: ${cur.date}\nNatija: ${i.n}\nIshonchlilik: ${cur.conf}%\n\n${i.d}\n\nTavsiyalar:\n- ${i.t.join("\n- ")}\n`;
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"text/plain;charset=utf-8"}));
+ a.download="tashxis-"+Date.now()+".txt";a.click();URL.revokeObjectURL(a.href);toast("Natija saqlandi");
+};
+$("#histBtn").onclick=()=>addHist(false);
+
+/* ---------- Ko‘rinishlar ---------- */
+function rows(list){
+ return list.length?`<table><tr><th>Sana</th><th>Tasvir</th><th>Natija</th><th>Ishonchlilik</th></tr>${list.map(h=>`<tr><td>${h.date}</td><td><img src="${h.img}" alt=""></td><td>${DB[h.key].n}</td><td>${h.conf}%</td></tr>`).join("")}</table>`
+ :'<div class="empty"><p>Hozircha tashxislar yo‘q.</p></div>';
+}
+function render(){
+ $("#recent").innerHTML=rows(history.slice(0,3));
+ $("#histBox").innerHTML=rows(history);
+ $("#sTotal").textContent=history.length;
+ $("#sHealthy").textContent=history.filter(h=>h.key==="healthy").length;
+ $("#sSick").textContent=history.filter(h=>h.key!=="healthy").length;
+}
+$("#samples").innerHTML=ORDER.map((k,i)=>`<button data-k="${k}" data-i="${i}"><img alt="${LABELS[k]}" src="${leaf(k,i+3)}">${LABELS[k]}</button>`).join("");
+$("#samples").onclick=e=>{const b=e.target.closest("button");if(b){useDemo=true;show(leaf(b.dataset.k,+b.dataset.i+3))}};
+const tg={ok:["Xavfsiz","background:var(--gl);color:var(--g2)"],warn:["O‘rtacha xavf","background:var(--ambl);color:var(--amb)"],bad:["Yuqori xavf","background:var(--redl);color:var(--red)"]};
+$("#disList").innerHTML=ORDER.map((k,i)=>{const d=DB[k];return`<div class="card"><img alt="${d.n}" src="${leaf(k,i+3)}"><span class="tag" style="${tg[d.lv][1]}">${tg[d.lv][0]}</span><h2 style="margin-bottom:6px">${d.n}</h2><p style="color:var(--mut);font-size:14.5px">${d.d}</p></div>`}).join("");
+
+/* ---------- Navigatsiya ---------- */
+$("#nav").onclick=e=>{const b=e.target.closest("button");if(!b)return;
+ document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("on",x===b));
+ document.querySelectorAll(".page").forEach(p=>p.classList.toggle("on",p.id===b.dataset.p));scrollTo(0,0)};
+$("#clearBtn").onclick=()=>{if(history.length&&confirm("Barcha tarix o‘chirilsinmi?")){history=[];store.set("hist",history);render();toast("Tarix tozalandi")}};
+
+/* ---------- Sozlamalar ---------- */
+function applySet(){
+ document.documentElement.dataset.theme=settings.dark?"dark":"light";
+ $("#themeBtn").textContent=settings.dark?"Kunduzgi rejim":"Tungi rejim";
+ $("#darkChk").checked=settings.dark;$("#autoChk").checked=settings.auto;
+ $("#thr").value=settings.thr;$("#thrV").textContent=settings.thr+"%";store.set("set",settings);
+}
+$("#themeBtn").onclick=()=>{settings.dark=!settings.dark;applySet()};
+$("#darkChk").onchange=e=>{settings.dark=e.target.checked;applySet()};
+$("#autoChk").onchange=e=>{settings.auto=e.target.checked;applySet()};
+$("#thr").oninput=e=>{settings.thr=+e.target.value;applySet()};
+
+let tt;function toast(m,ms=2200){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),ms)}
+applySet();render();
+
+/* ---------- Profil (faqat brauzerda) ---------- */
+const prof=store.get("prof",null);
+function greet(){const p=store.get("prof",null);if(p&&p.name)$("#heroT").innerHTML="Salom, <em>"+p.name.replace(/[<>&"]/g,"")+"</em>!"}
+if(prof){$("#uName").value=prof.name||"";$("#uFarm").value=prof.farm||"";$("#uCrop").value=prof.crop||"Pomidor"}
+greet();
+$("#joinBtn").onclick=()=>{const n=$("#uName").value.trim();if(!n)return toast("Ismingizni kiriting");
+ store.set("prof",{name:n,farm:$("#uFarm").value.trim(),crop:$("#uCrop").value});greet();toast("Xush kelibsiz, "+n+"!");
+ $("#tool").scrollIntoView({behavior:"smooth"})};
+</script>
+</body>
+</html>
